@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  ruby_version: 2.7.1
+  # ImageOs must be configured to match the OS of the runner when using self-hosted runners.
+  # ImageOS: ubuntu22
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.ruby_version }}
+      - name: Install dependencies
+        run: bundle install
+      - name: Run specs
+        run: bin/rspec
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.ruby_version }}
+      - name: Install dependencies
+        run: bundle install
+      - name: Lint
+        run: bin/rubocop
